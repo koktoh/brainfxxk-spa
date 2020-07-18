@@ -1,0 +1,124 @@
+﻿@page "/hibiki"
+
+<h3>響ちゃんマジ天使言語</h3>
+
+<br />
+
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th align="center">&nbsp; コマンド &nbsp;</th>
+            <th>&nbsp; 意味 &nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>&nbsp; @INC &nbsp;</td>
+            <td>&nbsp; ポインタが指す値をインクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @DEC &nbsp;</td>
+            <td>&nbsp; ポインタが指す値をデクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @MR &nbsp;</td>
+            <td>&nbsp; ポインタをインクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @ML &nbsp;</td>
+            <td>&nbsp; ポインタをデクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @LH &nbsp;</td>
+            <td>&nbsp; ポインタが指す値が0なら、対応する <code>@LT</code> の直後にジャンプ &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @LT &nbsp;</td>
+            <td>&nbsp; ポインタが指す値が0でないなら、対応する <code>@LH</code> の直後にジャンプ &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @READ &nbsp;</td>
+            <td>&nbsp; 入力から1バイト読み込んで、ポインタが指す先に代入 &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; @WRITE &nbsp;</td>
+            <td>&nbsp; ポインタが指す値を出力 &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; # &nbsp;</td>
+            <td>&nbsp; <code>;</code> か改行が現れるまで、以降の文字列を無視 &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp; ; &nbsp;</td>
+            <td>&nbsp; コメントアウト終了 &nbsp;</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<textarea style="font-family: monospace;" cols="70" rows="20" @bind="Text" />
+<br />
+<span>
+    <input type="checkbox" class="form-check-inline" @bind="@EnableCommentOut" />コメントアウトを有効
+    <button class="btn btn-primary" @onclick="Execute">実行</button>
+    <button class="btn btn-secondary" @onclick="Clear">クリア</button>
+</span>
+
+<br />
+<br />
+
+実行結果
+<br />
+<label>@Output</label>
+
+<br />
+
+@code {
+    private const string INC = "響ちゃん";
+    private const string DEC = "かわいい";
+    private const string MR = "天使";
+    private const string ML = "結婚しよ";
+    private const string LH = "マジ";
+    private const string LT = "かなさんどー";
+    private const string READ = "尊い";
+    private const string WRITE = "愛してる";
+
+    private string Text { get; set; } = string.Empty;
+    private bool EnableCommentOut { get; set; } = true;
+    private string Output { get; set; } = string.Empty;
+
+    private void Execute()
+    {
+        this.Output = string.Empty;
+
+        var commonConfig = new BFCore.Config.CommonConfig
+        {
+            EnableCommentOut = this.EnableCommentOut,
+        };
+
+        var commandConfig = new BFCore.Config.BFCommandConfig()
+        {
+            Increment = new BFCore.Command.BFCommand(INC, BFCore.Command.BFCommandType.Increment),
+            Decrement = new BFCore.Command.BFCommand(DEC, BFCore.Command.BFCommandType.Decrement),
+            MoveRight = new BFCore.Command.BFCommand(MR, BFCore.Command.BFCommandType.MoveRight),
+            MoveLeft = new BFCore.Command.BFCommand(ML, BFCore.Command.BFCommandType.MoveLeft),
+            LoopHead = new BFCore.Command.BFCommand(LH, BFCore.Command.BFCommandType.LoopHead),
+            LoopTail = new BFCore.Command.BFCommand(LT, BFCore.Command.BFCommandType.LoopTail),
+            Read = new BFCore.Command.BFCommand(READ, BFCore.Command.BFCommandType.Read),
+            Write = new BFCore.Command.BFCommand(WRITE, BFCore.Command.BFCommandType.Write),
+        };
+
+        var executer = new BrainfxxkExecuter(commonConfig, commandConfig);
+
+        executer.Execute(this.Text);
+
+        this.Output = executer.Output;
+    }
+
+    private void Clear()
+    {
+        this.Text = string.Empty;
+        this.Output = string.Empty;
+    }
+}

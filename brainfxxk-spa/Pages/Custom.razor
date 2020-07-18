@@ -1,0 +1,178 @@
+﻿@page "/custom"
+
+<h3>オリジナル言語</h3>
+
+<br />
+
+<div class="oi oi-warning" style="font-size:x-large;">
+    <div class="alert-danger">
+        <b><code>aa</code> と <code>aaa</code> のように同じ文字で文字数だけを変えたようなコマンドを同時に定義すると正しく実行されません</b>
+    </div>
+</div>
+
+<br />
+<br />
+
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th align="center">&nbsp; コマンド &nbsp;</th>
+            <th>&nbsp; 意味 &nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="text" @bind="@Inc" /></td>
+            <td>&nbsp; ポインタが指す値をインクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@Dec" /></td>
+            <td>&nbsp; ポインタが指す値をデクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@MR" /></td>
+            <td>&nbsp; ポインタをインクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@ML" /></td>
+            <td>&nbsp; ポインタをデクリメント &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@LH" /></td>
+            <td>&nbsp; ポインタが指す値が0なら、対応する <code>@LT</code> の直後にジャンプ &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@LT" /></td>
+            <td>&nbsp; ポインタが指す値が0でないなら、対応する <code>@LH</code> の直後にジャンプ &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@Read" /></td>
+            <td>&nbsp; 入力から1バイト読み込んで、ポインタが指す先に代入 &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@Write" /></td>
+            <td>&nbsp; ポインタが指す値を出力 &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@BC" /></td>
+            <td>&nbsp; <code>@EC</code> か改行が現れるまで、以降の文字列を無視 &nbsp;</td>
+        </tr>
+        <tr>
+            <td><input type="text" @bind="@EC" /></td>
+            <td>&nbsp; コメントアウト終了 &nbsp;</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<button class="btn btn-primary" @onclick="Reset">コマンド定義をリセット</button>
+
+<br />
+<br />
+
+<textarea style="font-family: monospace;" cols="70" rows="20" @bind="Text" />
+<br />
+<span>
+    <input type="checkbox" class="form-check-inline" @bind="@EnableCommentOut" />コメントアウトを有効
+    <button class="btn btn-primary" @onclick="Execute">実行</button>
+    <button class="btn btn-secondary" @onclick="Clear">クリア</button>
+</span>
+
+<br />
+<br />
+
+実行結果
+<br />
+<label>@Output</label>
+
+<br />
+
+@code {
+    private const string DEF_INC = "+";
+    private const string DEF_DEC = "-";
+    private const string DEF_MR = ">";
+    private const string DEF_ML = "<";
+    private const string DEF_LH = "[";
+    private const string DEF_LT = "]";
+    private const string DEF_READ = ",";
+    private const string DEF_WRITE = ".";
+    private const string DEF_BC = "#";
+    private const string DEF_EC = ";";
+
+    private string _inc = DEF_INC;
+    private string _dec = DEF_DEC;
+    private string _mr = DEF_MR;
+    private string _ml = DEF_ML;
+    private string _lh = DEF_LH;
+    private string _lt = DEF_LT;
+    private string _read = DEF_READ;
+    private string _write = DEF_WRITE;
+    private string _bc = DEF_BC;
+    private string _ec = DEF_EC;
+
+    private string Inc { get => this._inc; set => this._inc = string.IsNullOrEmpty(value) ? DEF_INC : value; }
+    private string Dec { get => this._dec; set => this._dec = string.IsNullOrEmpty(value) ? DEF_DEC : value; }
+    private string MR { get => this._mr; set => this._mr = string.IsNullOrEmpty(value) ? DEF_MR : value; }
+    private string ML { get => this._ml; set => this._ml = string.IsNullOrEmpty(value) ? DEF_ML : value; }
+    private string LH { get => this._lh; set => this._lh = string.IsNullOrEmpty(value) ? DEF_LH : value; }
+    private string LT { get => this._lt; set => this._lt = string.IsNullOrEmpty(value) ? DEF_LT : value; }
+    private string Read { get => this._read; set => this._read = string.IsNullOrEmpty(value) ? DEF_READ : value; }
+    private string Write { get => this._write; set => this._write = string.IsNullOrEmpty(value) ? DEF_WRITE : value; }
+    private string BC { get => this._bc; set => this._bc = string.IsNullOrEmpty(value) ? DEF_BC : value; }
+    private string EC { get => this._ec; set => this._ec = string.IsNullOrEmpty(value) ? DEF_EC : value; }
+
+    private string Text { get; set; } = string.Empty;
+    private bool EnableCommentOut { get; set; } = true;
+    private string Output { get; set; } = string.Empty;
+
+    private void Execute()
+    {
+        this.Output = string.Empty;
+
+        var commonConfig = new BFCore.Config.CommonConfig
+        {
+            EnableCommentOut = this.EnableCommentOut,
+        };
+
+        var commandConfig = new BFCore.Config.BFCommandConfig()
+        {
+            Increment = new BFCore.Command.BFCommand(this.Inc, BFCore.Command.BFCommandType.Increment),
+            Decrement = new BFCore.Command.BFCommand(this.Dec, BFCore.Command.BFCommandType.Decrement),
+            MoveRight = new BFCore.Command.BFCommand(this.MR, BFCore.Command.BFCommandType.MoveRight),
+            MoveLeft = new BFCore.Command.BFCommand(this.ML, BFCore.Command.BFCommandType.MoveLeft),
+            LoopHead = new BFCore.Command.BFCommand(this.LH, BFCore.Command.BFCommandType.LoopHead),
+            LoopTail = new BFCore.Command.BFCommand(this.LT, BFCore.Command.BFCommandType.LoopTail),
+            Read = new BFCore.Command.BFCommand(this.Read, BFCore.Command.BFCommandType.Read),
+            Write = new BFCore.Command.BFCommand(this.Write, BFCore.Command.BFCommandType.Write),
+            BeginComment = new BFCore.Command.BFCommand(this.BC, BFCore.Command.BFCommandType.BeginComment),
+            EndComment = new BFCore.Command.BFCommand(this.EC, BFCore.Command.BFCommandType.EndComment),
+        };
+
+        var executer = new BrainfxxkExecuter(commonConfig, commandConfig);
+
+        executer.Execute(this.Text);
+
+        this.Output = executer.Output;
+    }
+
+    private void Clear()
+    {
+        this.Text = string.Empty;
+        this.Output = string.Empty;
+    }
+
+    private void Reset()
+    {
+        this.Inc = DEF_INC;
+        this.Dec = DEF_DEC;
+        this.MR = DEF_MR;
+        this.ML = DEF_ML;
+        this.LH = DEF_LH;
+        this.LT = DEF_LT;
+        this.Read = DEF_READ;
+        this.Write = DEF_WRITE;
+        this.BC = DEF_BC;
+        this.EC = DEF_EC;
+    }
+}
