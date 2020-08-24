@@ -57,12 +57,12 @@
 
 <br />
 
-<textarea style="font-family: monospace;" cols="70" rows="20" @bind="Text" />
+<textarea style="font-family: monospace;" cols="70" rows="20" @bind="this.Text" />
 <br />
 <span>
-    <input type="checkbox" class="form-check-inline" @bind="@EnableCommentOut" />コメントアウトを有効
-    <button class="btn btn-primary" @onclick="Execute">実行</button>
-    <button class="btn btn-secondary" @onclick="Clear">クリア</button>
+    <input type="checkbox" class="form-check-inline" @bind="@this.EnableCommentOut" />コメントアウトを有効
+    <button class="btn btn-primary" @onclick="this.Execute">実行</button>
+    <button class="btn btn-secondary" @onclick="this.Clear">クリア</button>
 </span>
 
 <br />
@@ -70,7 +70,7 @@
 
 実行結果
 <br />
-<label>@Output</label>
+<label>@this.Output</label>
 
 <br />
 
@@ -92,21 +92,21 @@
     {
         this.Output = string.Empty;
 
-        var commonConfig = new BFCore.Config.CommonConfig
+        var commonConfig = new CommonConfig
         {
             EnableCommentOut = this.EnableCommentOut,
         };
 
-        var commandConfig = new BFCore.Config.BFCommandConfig()
+        var commandConfig = new BFCommandConfig
         {
-            Increment = new BFCore.Command.BFCommand(INC, BFCore.Command.BFCommandType.Increment),
-            Decrement = new BFCore.Command.BFCommand(DEC, BFCore.Command.BFCommandType.Decrement),
-            MoveRight = new BFCore.Command.BFCommand(MR, BFCore.Command.BFCommandType.MoveRight),
-            MoveLeft = new BFCore.Command.BFCommand(ML, BFCore.Command.BFCommandType.MoveLeft),
-            LoopHead = new BFCore.Command.BFCommand(LH, BFCore.Command.BFCommandType.LoopHead),
-            LoopTail = new BFCore.Command.BFCommand(LT, BFCore.Command.BFCommandType.LoopTail),
-            Read = new BFCore.Command.BFCommand(READ, BFCore.Command.BFCommandType.Read),
-            Write = new BFCore.Command.BFCommand(WRITE, BFCore.Command.BFCommandType.Write),
+            Increment = new BFCommand(INC, BFCommandType.Increment),
+            Decrement = new BFCommand(DEC, BFCommandType.Decrement),
+            MoveRight = new BFCommand(MR, BFCommandType.MoveRight),
+            MoveLeft = new BFCommand(ML, BFCommandType.MoveLeft),
+            LoopHead = new BFCommand(LH, BFCommandType.LoopHead),
+            LoopTail = new BFCommand(LT, BFCommandType.LoopTail),
+            Read = new BFCommand(READ, BFCommandType.Read),
+            Write = new BFCommand(WRITE, BFCommandType.Write),
         };
 
         var executer = new BrainfxxkExecuter(commonConfig, commandConfig);

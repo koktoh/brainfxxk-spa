@@ -22,43 +22,43 @@
     </thead>
     <tbody>
         <tr>
-            <td><input type="text" @bind="@Inc" /></td>
+            <td><input type="text" @bind="@this.Inc" /></td>
             <td>&nbsp; ポインタが指す値をインクリメント &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@Dec" /></td>
+            <td><input type="text" @bind="@this.Dec" /></td>
             <td>&nbsp; ポインタが指す値をデクリメント &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@MR" /></td>
+            <td><input type="text" @bind="@this.MR" /></td>
             <td>&nbsp; ポインタをインクリメント &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@ML" /></td>
+            <td><input type="text" @bind="@this.ML" /></td>
             <td>&nbsp; ポインタをデクリメント &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@LH" /></td>
-            <td>&nbsp; ポインタが指す値が0なら、対応する <code>@LT</code> の直後にジャンプ &nbsp;</td>
+            <td><input type="text" @bind="@this.LH" /></td>
+            <td>&nbsp; ポインタが指す値が0なら、対応する <code>@this.LT</code> の直後にジャンプ &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@LT" /></td>
-            <td>&nbsp; ポインタが指す値が0でないなら、対応する <code>@LH</code> の直後にジャンプ &nbsp;</td>
+            <td><input type="text" @bind="@this.LT" /></td>
+            <td>&nbsp; ポインタが指す値が0でないなら、対応する <code>@this.LH</code> の直後にジャンプ &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@Read" /></td>
+            <td><input type="text" @bind="@this.Read" /></td>
             <td>&nbsp; 入力から1バイト読み込んで、ポインタが指す先に代入 &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@Write" /></td>
+            <td><input type="text" @bind="@this.Write" /></td>
             <td>&nbsp; ポインタが指す値を出力 &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@BC" /></td>
-            <td>&nbsp; <code>@EC</code> か改行が現れるまで、以降の文字列を無視 &nbsp;</td>
+            <td><input type="text" @bind="@this.BC" /></td>
+            <td>&nbsp; <code>@this.EC</code> か改行が現れるまで、以降の文字列を無視 &nbsp;</td>
         </tr>
         <tr>
-            <td><input type="text" @bind="@EC" /></td>
+            <td><input type="text" @bind="@this.EC" /></td>
             <td>&nbsp; コメントアウト終了 &nbsp;</td>
         </tr>
     </tbody>
@@ -66,17 +66,17 @@
 
 <br />
 
-<button class="btn btn-primary" @onclick="Reset">コマンド定義をリセット</button>
+<button class="btn btn-primary" @onclick="this.Reset">コマンド定義をリセット</button>
 
 <br />
 <br />
 
-<textarea style="font-family: monospace;" cols="70" rows="20" @bind="Text" />
+<textarea style="font-family: monospace;" cols="70" rows="20" @bind="this.Text" />
 <br />
 <span>
-    <input type="checkbox" class="form-check-inline" @bind="@EnableCommentOut" />コメントアウトを有効
-    <button class="btn btn-primary" @onclick="Execute">実行</button>
-    <button class="btn btn-secondary" @onclick="Clear">クリア</button>
+    <input type="checkbox" class="form-check-inline" @bind="@this.EnableCommentOut" />コメントアウトを有効
+    <button class="btn btn-primary" @onclick="this.Execute">実行</button>
+    <button class="btn btn-secondary" @onclick="this.Clear">クリア</button>
 </span>
 
 <br />
@@ -84,7 +84,7 @@
 
 実行結果
 <br />
-<label>@Output</label>
+<label>@this.Output</label>
 
 <br />
 
@@ -130,23 +130,23 @@
     {
         this.Output = string.Empty;
 
-        var commonConfig = new BFCore.Config.CommonConfig
+        var commonConfig = new CommonConfig
         {
             EnableCommentOut = this.EnableCommentOut,
         };
 
-        var commandConfig = new BFCore.Config.BFCommandConfig()
+        var commandConfig = new BFCommandConfig
         {
-            Increment = new BFCore.Command.BFCommand(this.Inc, BFCore.Command.BFCommandType.Increment),
-            Decrement = new BFCore.Command.BFCommand(this.Dec, BFCore.Command.BFCommandType.Decrement),
-            MoveRight = new BFCore.Command.BFCommand(this.MR, BFCore.Command.BFCommandType.MoveRight),
-            MoveLeft = new BFCore.Command.BFCommand(this.ML, BFCore.Command.BFCommandType.MoveLeft),
-            LoopHead = new BFCore.Command.BFCommand(this.LH, BFCore.Command.BFCommandType.LoopHead),
-            LoopTail = new BFCore.Command.BFCommand(this.LT, BFCore.Command.BFCommandType.LoopTail),
-            Read = new BFCore.Command.BFCommand(this.Read, BFCore.Command.BFCommandType.Read),
-            Write = new BFCore.Command.BFCommand(this.Write, BFCore.Command.BFCommandType.Write),
-            BeginComment = new BFCore.Command.BFCommand(this.BC, BFCore.Command.BFCommandType.BeginComment),
-            EndComment = new BFCore.Command.BFCommand(this.EC, BFCore.Command.BFCommandType.EndComment),
+            Increment = new BFCommand(this.Inc, BFCommandType.Increment),
+            Decrement = new BFCommand(this.Dec, BFCommandType.Decrement),
+            MoveRight = new BFCommand(this.MR, BFCommandType.MoveRight),
+            MoveLeft = new BFCommand(this.ML, BFCommandType.MoveLeft),
+            LoopHead = new BFCommand(this.LH, BFCommandType.LoopHead),
+            LoopTail = new BFCommand(this.LT, BFCommandType.LoopTail),
+            Read = new BFCommand(this.Read, BFCommandType.Read),
+            Write = new BFCommand(this.Write, BFCommandType.Write),
+            BeginComment = new BFCommand(this.BC, BFCommandType.BeginComment),
+            EndComment = new BFCommand(this.EC, BFCommandType.EndComment),
         };
 
         var executer = new BrainfxxkExecuter(commonConfig, commandConfig);

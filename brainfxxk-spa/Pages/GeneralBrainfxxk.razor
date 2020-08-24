@@ -57,12 +57,12 @@
 
 <br />
 
-<textarea style="font-family: monospace;" cols="70" rows="20" @bind="Text" />
+<textarea style="font-family: monospace;" cols="70" rows="20" @bind="this.Text" />
 <br />
 <span>
-    <input type="checkbox" class="form-check-inline" @bind="@EnableCommentOut" />コメントアウトを有効
-    <button class="btn btn-primary" @onclick="Execute">実行</button>
-    <button class="btn btn-secondary" @onclick="Clear">クリア</button>
+    <input type="checkbox" class="form-check-inline" @bind="@this.EnableCommentOut" />コメントアウトを有効
+    <button class="btn btn-primary" @onclick="this.Execute">実行</button>
+    <button class="btn btn-secondary" @onclick="this.Clear">クリア</button>
 </span>
 
 <br />
@@ -70,7 +70,7 @@
 
 実行結果
 <br />
-<label>@Output</label>
+<label>@this.Output</label>
 
 <br />
 
@@ -84,12 +84,12 @@
     {
         this.Output = string.Empty;
 
-        var commonConfig = new BFCore.Config.CommonConfig
+        var commonConfig = new CommonConfig
         {
             EnableCommentOut = this.EnableCommentOut,
         };
 
-        var commandConfig = new BFCore.Config.BFCommandConfig();
+        var commandConfig = new BFCommandConfig();
 
         var executer = new BrainfxxkExecuter(commonConfig, commandConfig);
 
