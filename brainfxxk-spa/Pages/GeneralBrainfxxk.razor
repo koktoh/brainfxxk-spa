@@ -2,77 +2,81 @@
 
 <h3>General Brainfxxk</h3>
 
-<br />
-
-<table class="table-bordered">
-    <thead>
-        <tr>
-            <th align="center">&nbsp; コマンド &nbsp;</th>
-            <th>&nbsp; 意味 &nbsp;</th>
-        </tr>
-    </thead>
+<table class="table table-borderless">
     <tbody>
         <tr>
-            <td align="center">+</td>
-            <td>&nbsp; ポインタが指す値をインクリメント &nbsp;</td>
+            <td>
+                <textarea class="text-monospace" cols="70" rows="25" @bind="this.Text" />
+            </td>
+            <td>
+                <table class="table table-bordered table-striped thead-dark">
+                    <thead>
+                        <tr>
+                            <th class="border-right text-center">コマンド</th>
+                            <th>意味</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border-right text-center">+</td>
+                            <td>ポインタが指す値をインクリメント</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">-</td>
+                            <td>ポインタが指す値をデクリメント</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">&gt;</td>
+                            <td>ポインタをインクリメント</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">&lt;</td>
+                            <td>ポインタをデクリメント</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">[</td>
+                            <td>ポインタが指す値が0なら、対応する <code>]</code> の直後にジャンプ</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">]</td>
+                            <td>ポインタが指す値が0でないなら、対応する <code>[</code> の直後にジャンプ</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">,</td>
+                            <td>入力から1バイト読み込んで、ポインタが指す先に代入</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">.</td>
+                            <td>ポインタが指す値を出力</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">#</td>
+                            <td><code>;</code> か改行が現れるまで、以降の文字列を無視</td>
+                        </tr>
+                        <tr>
+                            <td class="border-right text-center">;</td>
+                            <td>コメントアウト終了</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
         </tr>
         <tr>
-            <td align="center">-</td>
-            <td>&nbsp; ポインタが指す値をデクリメント &nbsp;</td>
+            <td colspan="2">
+                <input type="checkbox" class="form-check-inline" @bind="@this.EnableCommentOut" />コメントアウトを有効
+                <button class="btn btn-primary ml-md-4" @onclick="this.Execute">実行</button>
+                <button class="btn btn-secondary ml-md-4" @onclick="this.Clear">クリア</button>
+            </td>
         </tr>
         <tr>
-            <td align="center">&gt;</td>
-            <td>&nbsp; ポインタをインクリメント &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">&lt;</td>
-            <td>&nbsp; ポインタをデクリメント &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">[</td>
-            <td>&nbsp; ポインタが指す値が0なら、対応する <code>]</code> の直後にジャンプ &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">]</td>
-            <td>&nbsp; ポインタが指す値が0でないなら、対応する <code>[</code> の直後にジャンプ &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">,</td>
-            <td>&nbsp; 入力から1バイト読み込んで、ポインタが指す先に代入 &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">.</td>
-            <td>&nbsp; ポインタが指す値を出力 &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">#</td>
-            <td>&nbsp; <code>;</code> か改行が現れるまで、以降の文字列を無視 &nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">;</td>
-            <td>&nbsp; コメントアウト終了 &nbsp;</td>
+            <td colspan="2">
+                <label class="oi oi-circle-check"> 実行結果</label>
+                <br />
+                <label class="border border-dark alert alert-dismissible">@this.Output</label>
+            </td>
         </tr>
     </tbody>
 </table>
-
-<br />
-
-<textarea style="font-family: monospace;" cols="70" rows="20" @bind="this.Text" />
-<br />
-<span>
-    <input type="checkbox" class="form-check-inline" @bind="@this.EnableCommentOut" />コメントアウトを有効
-    <button class="btn btn-primary" @onclick="this.Execute">実行</button>
-    <button class="btn btn-secondary" @onclick="this.Clear">クリア</button>
-</span>
-
-<br />
-<br />
-
-実行結果
-<br />
-<label>@this.Output</label>
-
-<br />
 
 @code {
     private string Text { get; set; } = string.Empty;
